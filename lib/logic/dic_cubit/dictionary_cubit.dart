@@ -3,8 +3,9 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
-import 'package:dictionary/model/dictionary_model.dart';
-import 'package:dictionary/model/not_found.dart';
+import 'package:dictionary/model/dictionary/dictionary_model.dart';
+import 'package:dictionary/model/dictionary/not_found.dart';
+
 import 'package:dictionary/repository/dictioanry_repo.dart';
 import 'package:equatable/equatable.dart';
 

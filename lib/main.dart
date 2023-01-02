@@ -29,7 +29,6 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Dictionary',
         theme: ThemeData(
           primarySwatch: Colors.blue,
-          // scaffoldBackgroundColor: Color.
         ),
         home: const WordSearch(),
       ),

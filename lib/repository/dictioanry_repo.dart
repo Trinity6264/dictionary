@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dictionary/logic/dic_cubit/dictionary_cubit.dart';
-import 'package:dictionary/model/dictionary_model.dart';
-import 'package:dictionary/model/not_found.dart';
+import 'package:dictionary/model/dictionary/dictionary_model.dart';
+import 'package:dictionary/model/dictionary/not_found.dart';
 import 'package:dictionary/service/http_service.dart';
 
 class DictionaryRepo {

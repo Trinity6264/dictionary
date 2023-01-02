@@ -1,8 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:dictionary/constant/custom_color.dart';
+import 'package:dictionary/model/dictionary/dictionary_model.dart';
+import 'package:dictionary/presentation/widget/title_body.dart';
 import 'package:flutter/material.dart';
 
-import 'package:dictionary/model/dictionary_model.dart';
 import 'package:just_audio/just_audio.dart';
 
 class WordDescription extends StatefulWidget {
@@ -20,7 +21,8 @@ class _WordDescriptionState extends State<WordDescription> {
   final player = AudioPlayer();
   @override
   void initState() {
-    player.setUrl(widget.model.phonetics![0].audio ?? '');
+    if (widget.model.phonetics!.isEmpty) return;
+    player.setUrl(widget.model.phonetics?[0].audio ?? '');
     super.initState();
   }
 
@@ -74,169 +76,118 @@ class _WordDescriptionState extends State<WordDescription> {
               const SizedBox(height: 10),
               head('Pronunciation'),
               const SizedBox(height: 10),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    const TextSpan(
-                      text: 'IPA:   ',
-                      style: TextStyle(
-                        color: CustomColor.lineColor,
-                      ),
-                    ),
-                    TextSpan(
-                      text: widget.model.phonetics?[0].text ?? '',
-                      style: const TextStyle(
-                        color: CustomColor.textLightGrey,
-                        fontWeight: FontWeight.w300,
-                      ),
-                    ),
-                  ],
-                ),
+              TitleBody(
+                title: 'IPA:   ',
+                body: widget.model.phonetics?[0].text ?? '',
               ),
               const SizedBox(height: 5),
               const Divider(color: CustomColor.lineColor),
               const SizedBox(height: 5),
               head('Meaning'),
               const SizedBox(height: 5),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    const TextSpan(
-                      text: 'Part Of Speech:   ',
-                      children: [],
-                      style: TextStyle(
-                        color: CustomColor.lineColor,
-                      ),
-                    ),
-                    TextSpan(
-                      text: widget.model.meanings?[0].partOfSpeech ?? '',
-                      style: const TextStyle(
-                        color: CustomColor.textLightGrey,
-                        fontWeight: FontWeight.w300,
-                      ),
-                    ),
-                  ],
-                ),
+              TitleBody(
+                title: 'Part Of Speech:   ',
+                body: widget.model.meanings?[0].partOfSpeech ?? '',
               ),
               const SizedBox(height: 5),
               head('Definition:'),
               const SizedBox(height: 5),
               Column(
-                children: widget.model.meanings!
-                    .map(
-                      (e) => Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: e.definitions!
-                            .map((e) => Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    '🗣️ ${e.definition}',
-                                    style: const TextStyle(
-                                      color: CustomColor.textLightGrey,
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                                  ),
-                                ))
-                            .toList(),
-                      ),
-                    )
-                    .toList(),
+                children: widget.model.meanings != null
+                    ? widget.model.meanings!
+                        .map(
+                          (e) => Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: e.definitions != null
+                                ? e.definitions!
+                                    .map((e) => Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            '🗣️ ${e.definition}',
+                                            style: const TextStyle(
+                                              color: CustomColor.textLightGrey,
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                          ),
+                                        ))
+                                    .toList()
+                                : [],
+                          ),
+                        )
+                        .toList()
+                    : [],
               ),
               const Divider(color: CustomColor.lineColor),
               const SizedBox(height: 5),
               head('Synonyms:'),
               const SizedBox(height: 5),
               Column(
-                children: widget.model.meanings!
-                    .map(
-                      (e) => Column(
-                        children: e.synonyms!
-                            .map((e) => Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Text(
-                                    e,
-                                    style: const TextStyle(
-                                      color: CustomColor.textLightGrey,
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                                  ),
-                                ))
-                            .toList(),
-                      ),
-                    )
-                    .toList(),
+                children: widget.model.meanings != null
+                    ? widget.model.meanings!
+                        .map(
+                          (e) => Column(
+                            children: e.synonyms != null
+                                ? e.synonyms!
+                                    .map((e) => Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: Text(
+                                            e,
+                                            style: const TextStyle(
+                                              color: CustomColor.textLightGrey,
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                          ),
+                                        ))
+                                    .toList()
+                                : [],
+                          ),
+                        )
+                        .toList()
+                    : [],
               ),
               const Divider(color: CustomColor.lineColor),
               const SizedBox(height: 5),
               head('Antonyms:'),
               const SizedBox(height: 5),
               Column(
-                children: widget.model.meanings!
-                    .map(
-                      (e) => Column(
-                        children: e.antonyms!
-                            .map((e) => Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child: Text(
-                                    e,
-                                    style: const TextStyle(
-                                      color: CustomColor.textLightGrey,
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                                  ),
-                                ))
-                            .toList(),
-                      ),
-                    )
-                    .toList(),
+                children: widget.model.meanings != null
+                    ? widget.model.meanings!
+                        .map(
+                          (e) => Column(
+                            children: e.antonyms != null
+                                ? e.antonyms!
+                                    .map((e) => Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: Text(
+                                            e,
+                                            style: const TextStyle(
+                                              color: CustomColor.textLightGrey,
+                                              fontWeight: FontWeight.w300,
+                                            ),
+                                          ),
+                                        ))
+                                    .toList()
+                                : [],
+                          ),
+                        )
+                        .toList()
+                    : [],
               ),
               const Divider(color: CustomColor.lineColor),
               const SizedBox(height: 5),
               head('Licenses:'),
               const SizedBox(height: 5),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    const TextSpan(
-                      text: 'Name:   ',
-                      children: [],
-                      style: TextStyle(
-                        color: CustomColor.lineColor,
-                      ),
-                    ),
-                    TextSpan(
-                      text: widget.model.license?.name ?? '',
-                      style: const TextStyle(
-                        color: CustomColor.textLightGrey,
-                        fontWeight: FontWeight.w300,
-                      ),
-                    ),
-                  ],
-                ),
+              TitleBody(
+                title: 'Name:   ',
+                body: widget.model.license?.name ?? '',
               ),
               const Divider(color: CustomColor.lineColor),
               const SizedBox(height: 5),
               head('Source:'),
               const SizedBox(height: 5),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    const TextSpan(
-                      text: 'Url:   ',
-                      children: [],
-                      style: TextStyle(
-                        color: CustomColor.lineColor,
-                      ),
-                    ),
-                    TextSpan(
-                      text: widget.model.sourceUrls?[0] ?? '',
-                      style: const TextStyle(
-                        color: CustomColor.textLightGrey,
-                        fontWeight: FontWeight.w300,
-                      ),
-                    ),
-                  ],
-                ),
+              TitleBody(
+                title: 'Url:   ',
+                body: widget.model.sourceUrls?[0] ?? '',
               ),
             ],
           ),
