@@ -8,10 +8,9 @@ class HttpService {
   // Get data
 
   Future<http.Response> searchWord(String life) async {
-    log(life);
     final res = await http
         .get(Uri.parse('$baseUrl/$life'))
-        .timeout(const Duration(seconds: 10));
+        .timeout(const Duration(seconds: 30));
     return res;
   }
 }

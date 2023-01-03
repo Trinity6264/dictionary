@@ -1,8 +1,13 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
 import 'package:dictionary/constant/custom_color.dart';
+import 'package:dictionary/constant/enums.dart';
+import 'package:dictionary/logic/sound/sound_cubit.dart';
 import 'package:dictionary/model/dictionary/dictionary_model.dart';
 import 'package:dictionary/presentation/widget/title_body.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:just_audio/just_audio.dart';
 
@@ -18,22 +23,29 @@ class WordDescription extends StatefulWidget {
 }
 
 class _WordDescriptionState extends State<WordDescription> {
-  final player = AudioPlayer();
   @override
   void initState() {
     if (widget.model.phonetics!.isEmpty) return;
-    player.setUrl(widget.model.phonetics?[0].audio ?? '');
+    context
+        .read<SoundCubit>()
+        .loadSound(url: widget.model.phonetics?[0].audio ?? '');
+
     super.initState();
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
   void dispose() {
-    player.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    context.watch<SoundCubit>().checkingSomething();
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: CustomColor.darkGrey,
@@ -64,10 +76,37 @@ class _WordDescriptionState extends State<WordDescription> {
                     const SizedBox(width: 10),
                     Text(widget.model.word!),
                     const Spacer(),
-                    IconButton(
-                        onPressed: player.play,
-                        icon: const Icon(Icons.play_arrow),
-                        color: CustomColor.textLightGrey),
+                    BlocBuilder<SoundCubit, SoundState>(
+                      builder: (context, state) {
+                        log(state.toString());
+                        if (state is SoundPlaying &&
+                            state.playType == PlayType.idle) {
+                          return const CircularProgressIndicator();
+                        } else if (state is SoundPlaying &&
+                            state.playType == PlayType.buffering) {
+                          return const Icon(
+                            Icons.not_interested_outlined,
+                            color: CustomColor.textLightGrey,
+                          );
+                        } else if (state is SoundPlaying &&
+                            state.playType == PlayType.playing) {
+                          return const Icon(
+                            Icons.stop,
+                            color: CustomColor.textLightGrey,
+                          );
+                        } else if (state is SoundPlaying &&
+                            state.playType == PlayType.ready) {
+                          return IconButton(
+                            onPressed: () {
+                              context.read<SoundCubit>().playAudio();
+                            },
+                            icon: const Icon(Icons.play_arrow_sharp),
+                          );
+                        } else {
+                          return const SizedBox.shrink();
+                        }
+                      },
+                    ),
                     const SizedBox(width: 10),
                     const Icon(Icons.star, color: CustomColor.textLightGrey),
                   ],
@@ -78,7 +117,9 @@ class _WordDescriptionState extends State<WordDescription> {
               const SizedBox(height: 10),
               TitleBody(
                 title: 'IPA:   ',
-                body: widget.model.phonetics?[0].text ?? '',
+                body: widget.model.phonetics!.isEmpty
+                    ? 'none'
+                    : widget.model.phonetics?[0].text ?? '',
               ),
               const SizedBox(height: 5),
               const Divider(color: CustomColor.lineColor),

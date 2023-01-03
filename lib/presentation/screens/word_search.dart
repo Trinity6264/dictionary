@@ -78,7 +78,7 @@ class _WordSearchState extends State<WordSearch> {
                 } else if (state is WordError) {
                   return Center(
                     child: Text(
-                      state.toString(),
+                      state.message,
                       style: const TextStyle(
                         color: CustomColor.textLightGrey,
                       ),
@@ -127,39 +127,44 @@ class _WordSearchState extends State<WordSearch> {
         ),
         const SizedBox(height: 10),
         const Divider(color: CustomColor.textLightGrey),
-        ListView.separated(
-          shrinkWrap: true,
-          separatorBuilder: (context, index) =>
-              const Divider(color: CustomColor.lineColor),
-          itemCount: state.dictionary.length,
-          itemBuilder: ((context, index) {
-            final model = state.dictionary[index];
-            return InkWell(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => WordDescription(model: model),
-                ));
-              },
-              child: Container(
-                margin: const EdgeInsets.symmetric(vertical: 10),
-                height: MediaQuery.of(context).size.height * .06,
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 10,
-                    horizontal: 20,
-                  ),
-                  child: Text(
-                    model.word!,
-                    style: const TextStyle(
-                      color: CustomColor.textLightGrey,
-                      fontSize: 18.0,
+        Container(
+          color: CustomColor.lightDarkGrey,
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height * 1,
+          child: ListView.separated(
+            // shrinkWrap: true,
+            separatorBuilder: (context, index) =>
+                const Divider(color: CustomColor.lineColor),
+            itemCount: state.dictionary.length,
+            itemBuilder: ((context, index) {
+              final model = state.dictionary[index];
+              return InkWell(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => WordDescription(model: model),
+                  ));
+                },
+                child: Container(
+                  margin: const EdgeInsets.symmetric(vertical: 10),
+                  height: MediaQuery.of(context).size.height * .06,
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: 20,
+                    ),
+                    child: Text(
+                      model.word!,
+                      style: const TextStyle(
+                        color: CustomColor.textLightGrey,
+                        fontSize: 18.0,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            );
-          }),
+              );
+            }),
+          ),
         ),
       ],
     );
