@@ -16,31 +16,32 @@ class SoundCubit extends Cubit<SoundState> {
 
   void loadSound({required String url}) async {
     try {
+      log(url);
       await player.setUrl(url);
-      player.play();
-      playAudio();
     } on PlayerException catch (e) {
-      log(e.message ?? '');
+      emit(const SoundPlayingError(errMessage: 'Error loading audio'));
     }
-  }
-
-  void checkingSomething() {
-    log(player.processingState.name);
-    log(player.playerState.toString());
   }
 
   // play audio
   void playAudio() async {
-    if (player.processingState == ProcessingState.loading) {
-      emit(const SoundPlaying(playType: PlayType.loading));
-    } else if (player.processingState == ProcessingState.idle) {
-      emit(const SoundPlaying(playType: PlayType.idle));
-    } else if (player.processingState == ProcessingState.ready) {
-      emit(const SoundPlaying(playType: PlayType.ready));
-    } else if (player.processingState == ProcessingState.buffering) {
-      emit(const SoundPlaying(playType: PlayType.buffering));
-    } else {
-      emit(const SoundPlaying(playType: PlayType.stop));
+    try {
+      log('message');
+      player.play();
+      log(player.playerState.processingState.name);
+      if (player.processingState == ProcessingState.loading) {
+        emit(const SoundPlaying(playType: PlayType.loading));
+      } else if (player.processingState == ProcessingState.idle) {
+        emit(const SoundPlaying(playType: PlayType.idle));
+      } else if (player.processingState == ProcessingState.ready) {
+        emit(const SoundPlaying(playType: PlayType.ready));
+      } else if (player.processingState == ProcessingState.buffering) {
+        emit(const SoundPlayingError(errMessage: 'Error loading audio'));
+      } else {
+        emit(const SoundPlaying(playType: PlayType.stop));
+      }
+    } catch (e) {
+      emit(const SoundPlayingError(errMessage: 'Error loading audio'));
     }
   }
 

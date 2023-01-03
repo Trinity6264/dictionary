@@ -28,6 +28,7 @@ class _WordSearchState extends State<WordSearch> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: CustomColor.darkGrey,
         title: const Text(
@@ -127,10 +128,9 @@ class _WordSearchState extends State<WordSearch> {
         ),
         const SizedBox(height: 10),
         const Divider(color: CustomColor.textLightGrey),
-        Container(
-          color: CustomColor.lightDarkGrey,
+        SizedBox(
           width: double.infinity,
-          height: MediaQuery.of(context).size.height * 1,
+          height: MediaQuery.of(context).size.height * .55,
           child: ListView.separated(
             // shrinkWrap: true,
             separatorBuilder: (context, index) =>
